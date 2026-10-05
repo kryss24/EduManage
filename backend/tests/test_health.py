@@ -15,6 +15,7 @@ def test_health_check_returns_ok():
     assert response.json() == {"status": "ok"}
 
 
+@pytest.mark.django_db
 def test_health_check_is_public(client):
     """L'endpoint de santé doit rester accessible sans authentification."""
     response = client.get("/api/health/")

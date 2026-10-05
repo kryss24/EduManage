@@ -7,6 +7,7 @@ via django-environ. Aucune valeur par défaut « permissive » n'est fournie
 ici pour la production : chaque environnement (dev/prod/test) surcharge
 ce qu'il faut.
 """
+
 from datetime import timedelta
 from pathlib import Path
 
@@ -122,9 +123,7 @@ REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
-    "DEFAULT_PERMISSION_CLASSES": (
-        "rest_framework.permissions.IsAuthenticated",
-    ),
+    "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
 }
 
 # ---------------------------------------------------------------------------
