@@ -1,7 +1,7 @@
 ## Ticket Jira
 
-<!-- Lien ou clé du ticket, ex. ECOLE-12 -->
-ECOLE-xx
+<!-- Lien ou clé du ticket, ex. SCRUM-12 -->
+SCRUM-xx
 
 ## Description
 

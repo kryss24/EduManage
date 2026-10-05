@@ -6,7 +6,7 @@ moyennes, bulletins PDF.
 Stack : **React + Bootstrap (PWA)** · **Django + Django REST Framework** · **PostgreSQL** ·
 authentification **JWT** · déploiement prévu sur **Render**.
 
-Suivi du projet : Jira, projet `ECOLE`.
+Suivi du projet : Jira, projet `SCRUM`.
 
 ## Démarrage rapide (< 10 min)
 
@@ -62,8 +62,8 @@ Voir [`docs/`](docs/) pour la documentation fonctionnelle et technique.
 
 ## Convention de branches et de commits
 
-- Branches : `feature/ECOLE-12-description-courte`
-- Commits : `ECOLE-12: message court`
+- Branches : `feature/SCRUM-12-description-courte`
+- Commits : `SCRUM-12: message court`
 
-Chaque PR doit référencer un ticket Jira (`ECOLE-xx`) et suivre le
+Chaque PR doit référencer un ticket Jira (`SCRUM-xx`) et suivre le
 [template de PR](.github/pull_request_template.md).
