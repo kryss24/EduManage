@@ -3,17 +3,31 @@ name: Frontend CI
 on:
   push:
     branches: [develop, main]
-    paths:
-      - "frontend/**"
-      - ".github/workflows/frontend.yml"
   pull_request:
-    paths:
-      - "frontend/**"
-      - ".github/workflows/frontend.yml"
 
 jobs:
+  changes:
+    name: detect-frontend-changes
+    runs-on: ubuntu-latest
+    outputs:
+      frontend: ${{ steps.filter.outputs.frontend }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Detect relevant path changes
+        id: filter
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            frontend:
+              - "frontend/**"
+              - ".github/workflows/frontend.yml"
+
   frontend-build:
     name: frontend-build
+    needs: changes
+    if: needs.changes.outputs.frontend == 'true'
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -58,4 +72,4 @@ jobs:
 
       - name: No frontend project yet
         if: steps.check.outputs.exists == 'false'
-        run: echo "frontend/package.json absent : squelette React pas encore créé, étape ignorée."
+        run: echo "frontend/package.json absent - squelette React pas encore créé, étape ignorée."

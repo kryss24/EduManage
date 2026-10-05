@@ -3,17 +3,31 @@ name: Backend CI
 on:
   push:
     branches: [develop, main]
-    paths:
-      - "backend/**"
-      - ".github/workflows/backend.yml"
   pull_request:
-    paths:
-      - "backend/**"
-      - ".github/workflows/backend.yml"
 
 jobs:
+  changes:
+    name: detect-backend-changes
+    runs-on: ubuntu-latest
+    outputs:
+      backend: ${{ steps.filter.outputs.backend }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Detect relevant path changes
+        id: filter
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            backend:
+              - "backend/**"
+              - ".github/workflows/backend.yml"
+
   backend-tests:
     name: backend-tests
+    needs: changes
+    if: needs.changes.outputs.backend == 'true'
     runs-on: ubuntu-latest
 
     services:
