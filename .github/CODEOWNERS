@@ -1,11 +1,11 @@
 # CODEOWNERS — à adapter avec les pseudos GitHub réels de l'équipe.
 # Remplacer @dev-a, @dev-b, @dev-c par les comptes GitHub des 3 développeurs.
 
-backend/apps/accounts/   @dev-a
-backend/config/          @dev-a
+backend/apps/accounts/   @kryss24
+backend/config/          @kryss24
 
 frontend/                @dev-b
 backend/apps/grades/     @dev-b
 
-backend/apps/academics/  @dev-c
-backend/apps/reports/    @dev-c
+backend/apps/academics/  @LyneMink
+backend/apps/reports/    @LyneMink
