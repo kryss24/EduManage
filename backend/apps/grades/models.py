@@ -44,7 +44,9 @@ class Grade(TenantModel):
                 fields=["student", "subject", "sequence"],
                 name="grade_student_subject_sequence_unique",
             ),
-            models.CheckConstraint(check=Q(value__gte=0, value__lte=20), name="grade_value_range"),
+            models.CheckConstraint(
+                condition=Q(value__gte=0, value__lte=20), name="grade_value_range"
+            ),
         ]
         indexes = [models.Index(fields=["sequence", "subject"], name="grade_sequence_subject_idx")]
 

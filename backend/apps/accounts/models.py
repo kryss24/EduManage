@@ -89,7 +89,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         constraints = [
             models.UniqueConstraint(Lower("email"), name="user_email_lower_unique"),
             models.CheckConstraint(
-                check=(
+                condition=(
                     Q(role="SUPER_ADMIN", school__isnull=True)
                     | (~Q(role="SUPER_ADMIN") & Q(school__isnull=False))
                 ),

@@ -42,10 +42,10 @@ class AcademicYear(TenantModel):
                 fields=["school", "label"], name="academicyear_school_label_unique"
             ),
             models.CheckConstraint(
-                check=Q(end_date__gt=F("start_date")), name="academicyear_end_after_start"
+                condition=Q(end_date__gt=F("start_date")), name="academicyear_end_after_start"
             ),
             models.CheckConstraint(
-                check=~Q(is_active=True, is_archived=True),
+                condition=~Q(is_active=True, is_archived=True),
                 name="academicyear_not_active_and_archived",
             ),
             models.UniqueConstraint(
@@ -93,10 +93,10 @@ class Sequence(TenantModel):
                 fields=["academic_year", "number"], name="sequence_academic_year_number_unique"
             ),
             models.CheckConstraint(
-                check=Q(number__gte=1, number__lte=6), name="sequence_number_range"
+                condition=Q(number__gte=1, number__lte=6), name="sequence_number_range"
             ),
             models.CheckConstraint(
-                check=Q(end_date__gt=F("start_date")), name="sequence_end_after_start"
+                condition=Q(end_date__gt=F("start_date")), name="sequence_end_after_start"
             ),
             ExclusionConstraint(
                 name="sequence_no_date_overlap",
@@ -279,7 +279,9 @@ class Subject(TenantModel):
             models.UniqueConstraint(
                 fields=["classroom", "name"], name="subject_classroom_name_unique"
             ),
-            models.CheckConstraint(check=Q(coefficient__gte=1), name="subject_coefficient_min_1"),
+            models.CheckConstraint(
+                condition=Q(coefficient__gte=1), name="subject_coefficient_min_1"
+            ),
         ]
 
     def clean(self):
