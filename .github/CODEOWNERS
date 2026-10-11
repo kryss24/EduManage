@@ -4,8 +4,8 @@
 backend/apps/accounts/   @kryss24
 backend/config/          @kryss24
 
-frontend/                @dev-b
-backend/apps/grades/     @dev-b
+frontend/                @KEVINELONTS
+backend/apps/grades/     @KEVINELONTS
 
 backend/apps/academics/  @LyneMink
 backend/apps/reports/    @LyneMink
