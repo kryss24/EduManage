@@ -48,6 +48,33 @@ docker compose run --rm backend python manage.py shell
 docker compose run --rm backend bash
 ```
 
+### Réinitialiser la base de données locale
+
+Nécessaire après avoir récupéré SCRUM-7 si votre base avait déjà été
+migrée avec le modèle utilisateur par défaut de Django (`auth.User`) :
+le modèle personnalisé (`accounts.User`, `AUTH_USER_MODEL`) doit exister
+avant la toute première migration.
+
+```bash
+docker compose down -v
+docker compose up --build
+```
+
+### Données de démonstration
+
+```bash
+# Définir SEED_USER_PASSWORD dans .env (voir .env.example) avant de lancer :
+docker compose run --rm backend python manage.py seed_demo_data
+
+# Supprimer uniquement les données de démo (écoles "[DEMO] ...") :
+docker compose run --rm backend python manage.py seed_demo_data --reset
+```
+
+Crée deux écoles `[DEMO] ...` avec années scolaires, classes, enseignants,
+élèves, parents et notes, afin de pouvoir tester l'isolation entre
+tenants. Idempotent (relancer la commande ne crée pas de doublons) et
+refuse de s'exécuter avec `DEBUG=False` sauf `--force`.
+
 ## Structure du dépôt
 
 ```
@@ -58,7 +85,9 @@ ecole/
 └── .github/     # Workflows CI, CODEOWNERS, template de PR
 ```
 
-Voir [`docs/`](docs/) pour la documentation fonctionnelle et technique.
+Voir [`docs/`](docs/) pour la documentation fonctionnelle et technique,
+dont [`docs/modele-donnees.md`](docs/modele-donnees.md) (modèles,
+schéma, décisions).
 
 ## Convention de branches et de commits
 

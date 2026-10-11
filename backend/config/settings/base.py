@@ -34,17 +34,21 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django.contrib.postgres",
     # Tiers
     "rest_framework",
     "rest_framework_simplejwt.token_blacklist",
     "corsheaders",
     # Apps internes du projet École
+    "apps.tenants",
     "apps.accounts",
     "apps.academics",
     "apps.grades",
     "apps.reports",
     "apps.core",
 ]
+
+AUTH_USER_MODEL = "accounts.User"
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
