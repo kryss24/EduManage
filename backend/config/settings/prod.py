@@ -10,7 +10,10 @@ from django.core.exceptions import ImproperlyConfigured
 from .base import *  # noqa: F401,F403
 from .base import JWT_SIGNING_KEY, LOGGING, SECRET_KEY, env
 
-DEBUG = False
+# Lu depuis l'environnement (pas de simple "False" en dur) : une valeur
+# DEBUG=True mal positionnée doit faire échouer le démarrage ci-dessous
+# plutôt qu'être silencieusement ignorée.
+DEBUG = env.bool("DEBUG", default=False)
 
 ALLOWED_HOSTS = env.list("ALLOWED_HOSTS")
 

@@ -7,3 +7,4 @@ coverage==7.6.*
 ruff==0.6.*
 factory_boy==3.3.*
 Faker==28.4.*
+time-machine==3.5.*

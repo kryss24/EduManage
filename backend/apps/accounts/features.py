@@ -131,4 +131,6 @@ def access_level_for(role: str, feature: str) -> str:
 
 def permissions_for_role(role: str) -> dict:
     """Dictionnaire ``{feature: level}`` complet pour un rôle (renvoyé par l'API)."""
-    return {feature: levels.get(role, AccessLevel.NONE) for feature, levels in FEATURE_MATRIX.items()}
+    return {
+        feature: levels.get(role, AccessLevel.NONE) for feature, levels in FEATURE_MATRIX.items()
+    }

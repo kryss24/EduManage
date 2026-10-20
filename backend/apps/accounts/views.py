@@ -135,7 +135,9 @@ class LoginView(APIView):
             return Response(GENERIC_LOGIN_ERROR, status=401)
 
         AxesProxyHandler.user_logged_in(sender=self.__class__, request=request, user=user)
-        record_audit(request, action="login_success", entity_type="User", entity_id=str(user.id))
+        record_audit(
+            request, action="login_success", entity_type="User", entity_id=str(user.id), user=user
+        )
 
         refresh = RefreshToken.for_user(user)
         data = build_auth_payload(user)
@@ -230,9 +232,7 @@ class ChangePasswordView(APIView):
         user.save(update_fields=["password"])
         blacklist_all_outstanding_tokens(user)
 
-        record_audit(
-            request, action="password_changed", entity_type="User", entity_id=str(user.id)
-        )
+        record_audit(request, action="password_changed", entity_type="User", entity_id=str(user.id))
 
         response = Response(status=204)
         _delete_refresh_cookie(response)

@@ -11,12 +11,13 @@ from .academics import (
     SubjectFactory,
     TeacherFactory,
 )
-from .accounts import UserFactory
+from .accounts import DEFAULT_TEST_PASSWORD, SuperAdminFactory, UserFactory
 from .grades import GradeFactory
 from .tenants import SchoolFactory
 
 __all__ = [
     "AcademicYearFactory",
+    "DEFAULT_TEST_PASSWORD",
     "ClassroomFactory",
     "ClassroomTeacherFactory",
     "EnrollmentFactory",
@@ -28,6 +29,7 @@ __all__ = [
     "StudentFactory",
     "StudentGuardianFactory",
     "SubjectFactory",
+    "SuperAdminFactory",
     "TeacherFactory",
     "UserFactory",
 ]
