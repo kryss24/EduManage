@@ -276,6 +276,10 @@ AXES_LOCKOUT_PARAMETERS = [["username", "ip_address"]]
 AXES_RESET_ON_SUCCESS = True
 AXES_HANDLER = "axes.handlers.database.AxesDatabaseHandler"
 AXES_HTTP_RESPONSE_CODE = 429
+# Le journal `AccessLog` d'axes force la création d'une session Django (pour
+# pouvoir corréler connexion/déconnexion par session) : inutile et indésirable
+# pour une API JWT sans état. `AccessAttempt`/le verrouillage n'en dépendent pas.
+AXES_DISABLE_ACCESS_LOG = True
 # Le champ "username" transmis aux vérifications d'axes est l'email.
 AXES_USERNAME_FORM_FIELD = "email"
 NUM_PROXIES = env.int("NUM_PROXIES", default=0)

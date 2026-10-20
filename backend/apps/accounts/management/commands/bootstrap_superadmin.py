@@ -85,7 +85,7 @@ class Command(BaseCommand):
             extra={
                 "event": "superadmin_bootstrap",
                 "email": mask_email(email),
-                "created": created,
+                "account_created": created,
             },
         )
 

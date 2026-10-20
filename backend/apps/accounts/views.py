@@ -25,7 +25,7 @@ from apps.accounts.serializers import (
     LoginSerializer,
     build_auth_payload,
 )
-from apps.accounts.token_utils import blacklist_all_outstanding_tokens
+from apps.accounts.token_utils import blacklist_all_outstanding_tokens, register_outstanding_token
 from apps.core.audit import log_security_event, mask_email, record_audit
 
 GENERIC_LOGIN_ERROR = {"detail": "Identifiants invalides."}
@@ -171,14 +171,15 @@ class RefreshView(APIView):
 
         access = refresh.access_token
 
-        try:
-            refresh.blacklist()
-        except AttributeError:
-            pass
+        # Rotation : l'ancien jti est mis en liste noire, le jeton est muté
+        # en un nouveau jti/exp/iat puis réenregistré comme actif (voir
+        # `register_outstanding_token` : nécessaire tant que la version
+        # installée de simplejwt n'a pas `Token.outstand()`).
+        refresh.blacklist()
         refresh.set_jti()
         refresh.set_exp()
         refresh.set_iat()
-        refresh.outstand()
+        register_outstanding_token(refresh, user)
 
         response = Response({"access": str(access)}, status=200)
         _set_refresh_cookie(response, str(refresh))
