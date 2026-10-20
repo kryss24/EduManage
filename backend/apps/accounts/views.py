@@ -11,6 +11,7 @@ puisqu'ils sont appelés par un client API, pas par un formulaire HTML).
 from axes.handlers.proxy import AxesProxyHandler
 from django.conf import settings
 from django.core.exceptions import ValidationError as DjangoValidationError
+from drf_spectacular.utils import extend_schema
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
@@ -109,6 +110,8 @@ class LoginView(APIView):
     permission_classes = [AllowAny]
     throttle_scope = "login"
 
+    # Forme de réponse ad-hoc (pas un serializer) : voir docs/api-auth.md.
+    @extend_schema(exclude=True)
     def post(self, request):
         serializer = LoginSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -155,6 +158,7 @@ class RefreshView(APIView):
     permission_classes = [AllowAny]
     throttle_scope = "refresh"
 
+    @extend_schema(exclude=True)  # voir docs/api-auth.md
     def post(self, request):
         _check_trusted_origin(request)
 
@@ -197,6 +201,7 @@ class LogoutView(APIView):
     de faire tourner des écritures en base.
     """
 
+    @extend_schema(exclude=True)  # voir docs/api-auth.md
     def post(self, request):
         _check_trusted_origin(request)
 
@@ -216,6 +221,7 @@ class LogoutView(APIView):
 class MeView(APIView):
     """`GET /api/auth/me/` : même contenu que `login`, sans jeton."""
 
+    @extend_schema(exclude=True)  # voir docs/api-auth.md
     def get(self, request):
         return Response(build_auth_payload(request.user))
 
@@ -223,6 +229,7 @@ class MeView(APIView):
 class ChangePasswordView(APIView):
     """`POST /api/auth/change-password/` : invalide tous les refresh existants."""
 
+    @extend_schema(exclude=True)  # voir docs/api-auth.md
     def post(self, request):
         serializer = ChangePasswordSerializer(data=request.data, context={"request": request})
         serializer.is_valid(raise_exception=True)

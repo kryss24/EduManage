@@ -44,6 +44,7 @@ nosetests.xml
 venv/
 env/
 ENV/
+.cache/
 
 # ---- Node / React ----
 node_modules/

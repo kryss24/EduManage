@@ -13,7 +13,8 @@ RUN apt-get update \
 # Dépendances installées avant la copie du code pour profiter du cache de couches
 COPY requirements/ requirements/
 ARG REQUIREMENTS_FILE=requirements/dev.txt
-RUN pip install --no-cache-dir -r ${REQUIREMENTS_FILE}
+RUN pip install --no-cache-dir --upgrade pip \
+    && pip install --no-cache-dir -r ${REQUIREMENTS_FILE}
 
 COPY . .
 
