@@ -64,7 +64,7 @@ jobs:
 
       - name: Test
         if: steps.check.outputs.exists == 'true'
-        run: npm test -- --watchAll=false
+        run: npm test
 
       - name: Build
         if: steps.check.outputs.exists == 'true'
