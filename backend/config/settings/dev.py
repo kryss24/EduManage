@@ -11,3 +11,9 @@ CORS_ALLOWED_ORIGINS = env.list(
     "CORS_ALLOWED_ORIGINS",
     default=["http://localhost:3000", "http://127.0.0.1:3000"],
 )
+
+# Pas de HTTPS en local : le cookie de refresh doit rester lisible par le
+# navigateur en clair (http://localhost...).
+AUTH_COOKIE_SECURE = env.bool("AUTH_COOKIE_SECURE", default=False)
+
+ADMIN_ENABLED = True

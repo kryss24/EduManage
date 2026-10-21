@@ -1,0 +1,4 @@
+-r base.txt
+
+bandit==1.9.*
+pip-audit==2.10.*
