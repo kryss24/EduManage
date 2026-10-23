@@ -9,12 +9,8 @@ updates:
         patterns:
           - "*"
 
-  # Le frontend (package.json) vit actuellement à la racine du dépôt, pas
-  # sous frontend/ (qui ne contient qu'un README) : voir le résumé du ticket
-  # SCRUM-8 pour la remarque sur cette incohérence de structure héritée de
-  # SCRUM-6.
   - package-ecosystem: "npm"
-    directory: "/"
+    directory: "/frontend"
     schedule:
       interval: "weekly"
     groups:
