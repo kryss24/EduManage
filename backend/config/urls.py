@@ -4,6 +4,7 @@ from django.urls import include, path
 urlpatterns = [
     path("api/", include("apps.core.urls")),
     path("api/auth/", include("apps.accounts.urls")),
+    path("api/academics/", include("apps.academics.api.urls")),
 ]
 
 if settings.ADMIN_ENABLED:

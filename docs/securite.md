@@ -18,26 +18,70 @@ donnée d'une autre école que la sienne.**
 - Un objet d'une autre école renvoie **404**, jamais 403 : un 403
   confirmerait son existence à un attaquant qui devine des identifiants.
 
-### Comment brancher un nouveau CRUD (élèves, classes, notes...)
+### Comment brancher un nouveau CRUD (référence : module `apps.academics.api` / ticket SCRUM-10)
+
+L'implémentation réalisée au ticket **SCRUM-10** (`apps/academics/api/`) constitue la **référence d'architecture** pour tous les CRUD métier suivants. Elle sépare rigoureusement la logique :
+- `serializers.py` : validation des contraintes locales et inter-champs, sérialisation explicite (jamais `__all__`), champs immuables protégés.
+- `filters.py` : filtres déclaratifs `django-filter` et tri strict en liste blanche via `StrictOrderingFilter`.
+- `services.py` : logique métier pure (transitions d'états, transactions atomiques, verrouillage `select_for_update`, audit via `record_audit`).
+- `views.py` : orchestration HTTP mince avec `TenantScopedViewSetMixin` et `HasFeatureAccess`.
+
+Exemple canonique issu de SCRUM-10 :
 
 ```python
 from rest_framework.viewsets import ModelViewSet
-from apps.core.tenancy import TenantModelSerializer, TenantScopedViewSetMixin
+from apps.core.tenancy import TenantModelSerializer, TenantScopedViewSetMixin, TenantPrimaryKeyRelatedField
 from apps.accounts.permissions import HasFeatureAccess
+from apps.accounts.scoping import classrooms_visible_to
+from apps.academics.models import Classroom, AcademicYear, Level
+from apps.academics.api.services import delete_classroom
 
 
 class ClassroomSerializer(TenantModelSerializer):
+    academic_year = TenantPrimaryKeyRelatedField(
+        queryset=AcademicYear.objects.all(),
+        label="Année scolaire",
+    )
+    level = TenantPrimaryKeyRelatedField(
+        queryset=Level.objects.all(),
+        label="Niveau",
+    )
+
     class Meta:
         model = Classroom
-        fields = ["id", "school", "name", "level", "academic_year"]
-        # `school` est déjà en lecture seule via TenantModelSerializer.
+        fields = [
+            "id",
+            "academic_year",
+            "level",
+            "name",
+            "academic_year_label",
+            "level_name",
+            "students_count",
+            "created_at",
+            "updated_at",
+        ]
+        read_only_fields = ["created_at", "updated_at"]
 
 
 class ClassroomViewSet(TenantScopedViewSetMixin, ModelViewSet):
-    queryset = Classroom.objects.all()
+    queryset = Classroom.objects.none()  # Pour drf-spectacular schema generation
     serializer_class = ClassroomSerializer
-    permission_classes = [IsAuthenticated, SchoolIsActive, HasFeatureAccess]
-    feature = "classrooms"  # clé de apps.accounts.features.FEATURE_MATRIX
+    permission_classes = [HasFeatureAccess]
+    feature = "classrooms"  # Clé de FEATURE_MATRIX
+    feature_required_levels = {
+        "destroy": "A",  # Suppression réservée aux administrateurs (A)
+    }
+
+    def get_queryset(self):
+        if getattr(self, "swagger_fake_view", False):
+            return Classroom.objects.none()
+        school = self.get_school()
+        # Filtre sur l'école et applique la restriction de visibilité par rôle (enseignant -> ses classes)
+        return classrooms_visible_to(self.request.user, school=school)
+
+    def perform_destroy(self, instance):
+        # Délégation au service métier (vérification des dépendances, année archivée, audit)
+        delete_classroom(instance, request=self.request)
 ```
 
 Ce qui est automatique avec ce mixin :
@@ -85,6 +129,13 @@ fermé — c'est un bug de la vue à corriger, jamais un accès à accorder par
 défaut). Le niveau requis dépend par défaut de la méthode HTTP (lecture =
 `L`, écriture = `E`) ; surchargeable par action via
 `feature_required_levels`.
+
+> [!NOTE]
+> **Accès Caissier et Parent aux classes et années scolaires** :
+> Dans la matrice actuelle, la fonctionnalité `classrooms` n'accorde aucun droit (`-`)
+> aux rôles `CASHIER` et `PARENT` (accès refusé 403 sur `/api/academics/*`).
+> Ce point d'architecture sera à réévaluer lors des tickets Finance (besoin d'associer un paiement
+> de scolarité à une classe/année) et Espace Parent (consultation de la classe de l'enfant).
 
 ## 3. Authentification JWT
 

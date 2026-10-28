@@ -11,3 +11,4 @@ django-environ==0.14.*
 gunicorn==26.2.*
 whitenoise==6.12.*
 Pillow==13.0.*
+django-filter==26.*
