@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     "corsheaders",
     "axes",
     "drf_spectacular",
+    "django_filters",
     # Apps internes du projet École
     "apps.tenants",
     "apps.accounts",
@@ -188,6 +189,11 @@ REST_FRAMEWORK = {
     # Nombre de proxys en amont de l'application (load balancer...) : utilisé
     # pour déterminer la vraie IP cliente depuis X-Forwarded-For.
     "NUM_PROXIES": env.int("NUM_PROXIES", default=0),
+    "DEFAULT_FILTER_BACKENDS": (
+        "django_filters.rest_framework.DjangoFilterBackend",
+        "rest_framework.filters.SearchFilter",
+        "rest_framework.filters.OrderingFilter",
+    ),
     "EXCEPTION_HANDLER": "apps.core.exceptions.exception_handler",
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
