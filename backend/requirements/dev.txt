@@ -1,10 +1,10 @@
 -r base.txt
 
-pytest==9.1.*
+pytest==9.2.*
 pytest-django==4.14.*
 pytest-cov==7.1.*
 coverage==7.17.*
 ruff==0.17.*
 factory_boy==3.3.*
-Faker==40.43.*
-time-machine==3.5.*
+Faker==40.44.*
+time-machine==3.6.*
